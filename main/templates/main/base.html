@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="../../static/style.css">
+    <title>Pulse</title>
+</head>
+<body>
+<header>
+    <div class="header-container">
+        <div class="header-container pulse">
+          <a href="/products">PULSE</a>
+        </div>
+        <div class="header-container catalogButton">
+            <a href="/catalog">
+                <button type="button" class="button">Каталог</button>
+            </a>
+        </div>
+        <form action="{% url 'search' %}" class="" method="post">
+            {% csrf_token %}
+            <div class="searchInput">
+                <input name="searchText" type="text" class="header-container searchText search" placeholder="Искать на PULSE">
+            </div>
+        </form >
+        <div class="header-container buttonSearch">
+            <a href="/aboutus">
+                <button type="button" class="button">О нас</button>
+            </a>
+        </div>
+        <div class="header-container imagebuttonuser">
+          <a href="/me"><img src="../../static/image/user.svg"></a>
+        </div>
+        <div class="header-container imagebuttonbasket">
+          <a href="/basket"><img src="../../static/image/basket.svg"></a>
+        </div>
+    </div>
+</header>
+{% block content %}
+{% endblock %}
+</body>
+</html>

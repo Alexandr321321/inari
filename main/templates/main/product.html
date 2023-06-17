@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="mainLabel"><h1>Товар</h1></div>
+    <div class="productsMain">
+                <div class="products-container product productsMain">
+                    <img class="productImage product products-container" style="margin-left: 200px" src="../../static{{ product.image.url }}">
+                    <div class="productLabel product products-container"><div class="logo">Название: </div>{{ product.label }}</div>
+                    <div class="productDescription product products-container"><div class="logo">Описание: </div>{{ product.description }}</div>
+                    <div class="productPrice product products-container"><div class="logo">Цена: </div>{{ product.price }} руб.</div>
+                    {% for user in users %}
+                        {% if product.username == user.username %}
+                            <div class="productSeller product products-container"><div class="logo">Продавец: </div>{{ user.nickname }}</div>
+                        {% endif %}
+                    {% endfor %}
+                    <form action="{% url 'addBasket' product.id %}" class="products-container" method="post">
+                        {% csrf_token %}
+                        <button class="productButton product products-container" type="submit">Купить</button>
+                    </form>
+                </div>
+    </div>
+{% endblock %}

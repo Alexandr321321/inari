@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="authorization">
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="authorization entryText"><h1>Вход</h1></div>
+        <label>
+            <input type="number" name="username" placeholder="Номер телефона" class="authorization username">
+        </label>
+        <label>
+            <input type="password" name="password" placeholder="Пароль" class="authorization password">
+        </label>
+        <button class="authorization authorizationButton" type="submit">Войти</button>
+        <div class="authorization registerLinkText"><p>Нет аккаунта? <a href="/register">Регистрация</a></p></div>
+        <div>
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in form.non_field_errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
