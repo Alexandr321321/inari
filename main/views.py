@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import path, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.db import connection
 
 # Create your views here.
 from main.forms import *
@@ -183,10 +184,12 @@ def basket(request):
     basket = Basket.objects.all()
     product = Product.objects.all()
     user = User.objects.all()
+    sell = Sells.objects.all()
     context = {
         'products': product,
         'users': user,
         'baskets': basket,
+        'sells': sell,
     }
     return render(request, 'main/basket.html', context)
 
@@ -212,9 +215,11 @@ def deleteBasket(request, product_id):
 def myProducts(request):
     product = Product.objects.all()
     user = User.objects.all()
+    basket = Basket.objects.all()
     context = {
         'products': product,
         'users': user,
+        'baskets': basket,
     }
     return render(request, 'main/myProducts.html', context)
 
@@ -233,3 +238,125 @@ def deleteUser(request):
     if User.objects.filter(username=username).exists():
         User.objects.filter(username=username).delete()
     return redirect('logout')
+
+@login_required
+def addAuctionBid(request, product_id):
+    if request.method == 'POST':
+        form = AddAuctionBid(request.POST)
+        for p in Product.objects.raw("SELECT * FROM main_product WHERE id = %s", [product_id]):
+            correct_auction = p.auction
+            correct_price = p.price
+        if form.is_valid() and int(form.cleaned_data['bid']) > int(correct_auction) and int(form.cleaned_data['bid']) < int(correct_price):
+            with connection.cursor() as cursor:
+                cursor.execute("DELETE FROM main_basket WHERE product_id = %s" % (product_id))
+                cursor.execute("INSERT INTO main_basket (username, product_id) VALUES (%s, %s)" % (request.user.username, product_id))
+                cursor.execute("UPDATE main_product SET auction = %s WHERE id = %s" % (form.cleaned_data['bid'], product_id))
+            return redirect('products')
+        return redirect('products')
+    else:
+        return redirect('products')
+
+@login_required
+def sellProduct(request, product_id):
+    if request.method == 'POST':
+        for p in Product.objects.raw("SELECT * FROM main_product WHERE id = %s", [product_id]):
+            correct_username = p.username
+            correct_auction = p.auction
+            correct_price = p.price
+            correct_status = 0
+        for b in Basket.objects.raw("SELECT * FROM main_basket WHERE product_id = %s", [product_id]):
+            correct_buyer = b.username
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO main_sells (username, product_id, buyer, price, auction, status) VALUES (%s, %s, %s, %s, %s, %s)" % (correct_username, product_id, correct_buyer, correct_price, correct_auction, correct_status))
+            cursor.execute("UPDATE main_product SET status = 1 WHERE id = %s" %  product_id)
+    return redirect('products')
+
+@login_required
+def buyProductAuction(request, product_id):
+    username = request.user.username
+    if request.method == 'POST':
+        for user in User.objects.raw("SELECT * FROM main_user WHERE username = %s", [username]):
+            correct_balance = user.balance
+        for product in Product.objects.raw("SELECT * FROM main_product WHERE id = %s", [product_id]):
+            correct_auction = product.auction
+            correct_seller_username = product.username
+        for user in User.objects.raw("SELECT * FROM main_user WHERE username = %s", [correct_seller_username]):
+            correct_seller_balance = user.balance
+        if int(correct_auction) <= int(correct_balance):
+            buyer_new_balance = int(correct_balance) - int(correct_auction)
+            seller_new_balance = int(correct_seller_balance) + int(correct_auction)
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE main_user SET balance = %s WHERE username = %s" % (buyer_new_balance, username))
+                cursor.execute("UPDATE main_user SET balance = %s WHERE username = %s" % (seller_new_balance, correct_seller_username))
+                cursor.execute("UPDATE main_sells SET status = 1 WHERE product_id = %s" % product_id)
+                cursor.execute("DELETE FROM main_basket WHERE product_id = %s" % product_id)
+        return redirect('purchases')
+    return redirect('products')
+
+@login_required
+def buyProductPrice(request, product_id):
+    username = request.user.username
+    if request.method == 'POST':
+        for user in User.objects.raw("SELECT * FROM main_user WHERE username = %s", [username]):
+            correct_balance = user.balance
+        for product in Product.objects.raw("SELECT * FROM main_product WHERE id = %s", [product_id]):
+            correct_price = product.price
+            correct_seller_username = product.username
+        for user in User.objects.raw("SELECT * FROM main_user WHERE username = %s", [correct_seller_username]):
+            correct_seller_balance = user.balance
+        if int(correct_price) <= int(correct_balance):
+            buyer_new_balance = int(correct_balance) - int(correct_price)
+            seller_new_balance = int(correct_seller_balance) + int(correct_price)
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE main_user SET balance = %s WHERE username = %s" % (buyer_new_balance, username))
+                cursor.execute("UPDATE main_user SET balance = %s WHERE username = %s" % (seller_new_balance, correct_seller_username))
+                cursor.execute("UPDATE main_sells SET status = 1 WHERE product_id = %s" % product_id)
+                cursor.execute("DELETE FROM main_basket WHERE product_id = %s" % product_id)
+        return redirect('purchases')
+    return redirect('products')
+
+@login_required
+def purchases(request):
+    basket = Basket.objects.all()
+    product = Product.objects.all()
+    user = User.objects.all()
+    sell = Sells.objects.all()
+    context = {
+        'products': product,
+        'users': user,
+        'baskets': basket,
+        'sells': sell,
+    }
+    return render(request, 'main/purchases.html', context)
+
+@login_required
+def upBalance(request):
+    username = request.user.username
+    if request.method == 'POST':
+        form = UpBalance(request.POST)
+        for user in User.objects.raw("SELECT * FROM main_user WHERE username = %s", [username]):
+            correct_balance = user.balance
+        if form.is_valid() and int(form.cleaned_data['up_balance']) > 0:
+            with connection.cursor() as cursor:
+                correct_balance = int(correct_balance) + int(form.cleaned_data['up_balance'])
+                cursor.execute("UPDATE main_user SET balance = %s WHERE username = %s" % (correct_balance, username))
+        return redirect('me')
+    else:
+        form = UpBalance()
+    return render(request, 'main/upbalance.html', {'form': form})
+
+@login_required
+def downBalance(request):
+    username = request.user.username
+    if request.method == 'POST':
+        form = DownBalance(request.POST)
+        for user in User.objects.raw("SELECT * FROM main_user WHERE username = %s", [username]):
+            correct_balance = user.balance
+        if form.is_valid() and int(form.cleaned_data['down_balance']) > 0 and int(form.cleaned_data['down_balance']) <= int(correct_balance):
+            with connection.cursor() as cursor:
+                correct_balance = int(correct_balance) - int(form.cleaned_data['down_balance'])
+                cursor.execute("UPDATE main_user SET balance = %s WHERE username = %s" % (correct_balance, username))
+        return redirect('me')
+    else:
+        form = DownBalance()
+    return render(request, 'main/downbalance.html', {'form': form})

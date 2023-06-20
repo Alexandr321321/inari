@@ -49,6 +49,13 @@ urlpatterns = [
     re_path(r'deleteUser', views.deleteUser, name='deleteUser'),
     re_path(r'myPoducts', views.myProducts, name='myProducts'),
     re_path(r'deleteProducts/(?P<product_id>[0-9]+)/$', views.deleteProducts, name='deleteProducts'),
+    re_path(r'addAuctionBid/(?P<product_id>[0-9]+)/$', views.addAuctionBid, name='addAuctionBid'),
+    re_path(r'sellProduct/(?P<product_id>[0-9]+)/$', views.sellProduct, name='sellProduct'),
+    re_path(r'buyProductAuction/(?P<product_id>[0-9]+)/$', views.buyProductAuction, name='buyProductAuction'),
+    re_path(r'buyProductPrice/(?P<product_id>[0-9]+)/$', views.buyProductPrice, name='buyProductPrice'),
+    re_path(r'upBalance/', views.upBalance, name='upBalance'),
+    re_path(r'purchases/', views.purchases, name='purchases'),
+    re_path(r'downBalance/', views.downBalance, name='downBalance'),
 ]
 
 if settings.DEBUG:
