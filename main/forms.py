@@ -66,3 +66,13 @@ class AddProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ('username', 'label', 'description', 'auction', 'price', 'category', 'image')
+
+
+class AddAuctionBid(forms.Form):
+    bid = forms.CharField(required=True, label='bid')
+
+class UpBalance(forms.Form):
+    up_balance = forms.CharField(required=True, label='up_balance')
+
+class DownBalance(forms.Form):
+    down_balance = forms.CharField(required=True, label='down_balance')

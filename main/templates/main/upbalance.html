@@ -1,0 +1,13 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+        <div class="catalog-container ">
+            <form action="{% url 'upBalance' %}" class="products-container" method="post">
+                <label>
+                    <input type="number" name="up_balance" placeholder="Сумма пополнения" class="addproduct description">
+                </label>
+                {% csrf_token %}
+                <button class="productButton products-container" name="foo" type="submit">Пополнить</button>
+            </form>
+        </div>
+{% endblock %}

@@ -13,7 +13,7 @@ class BasketAdmin(admin.ModelAdmin):
     list_display = ('username', 'product_id')
 
 class SellsAdmin(admin.ModelAdmin):
-    list_display = ('username', 'product_id', 'buyer', 'label', 'description', 'price', 'auction', 'category')
+    list_display = ('username', 'product_id', 'buyer', 'price', 'auction')
 
 
 admin.site.register(User, UserAdmin)

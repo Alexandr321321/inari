@@ -7,16 +7,29 @@
                     <img class="productImage product products-container" style="margin-left: 200px" src="../../static{{ product.image.url }}">
                     <div class="productLabel product products-container"><div class="logo">Название: </div>{{ product.label }}</div>
                     <div class="productDescription product products-container"><div class="logo">Описание: </div>{{ product.description }}</div>
-                    <div class="productPrice product products-container"><div class="logo">Цена: </div>{{ product.price }} руб.</div>
+                    <div class="productAuction products-container"><div class="logo">Аукционная цена: </div>{{ product.auction }} руб.</div>
+                    <div class="productPrice product products-container"><div class="logo">Выкупная цена: </div>{{ product.price }} руб.</div>
                     {% for user in users %}
                         {% if product.username == user.username %}
                             <div class="productSeller product products-container"><div class="logo">Продавец: </div>{{ user.nickname }}</div>
                         {% endif %}
                     {% endfor %}
-                    <form action="{% url 'addBasket' product.id %}" class="products-container" method="post">
-                        {% csrf_token %}
-                        <button class="productButton product products-container" type="submit">Купить</button>
-                    </form>
+                        {% if request.user.usertype == "buyer"%}
+                            <form action="{% url 'addAuctionBid' product.id %}" class="products-container" method="post">
+                                <label>
+                                <input type="number" name="bid" min="{{ product.auction }}" max="{{ product.price }}" placeholder="Аукционная цена" class="addproduct auction">
+                                    {% if form.errors.price %}
+                                        <div class="addproduct auctionError errorsInput">Ошибка аукционной цены</div>
+                                    {% endif %}
+                                </label>
+                                {% csrf_token %}
+                                <button class="productButton products-container" name="foo" type="submit">Ставка</button>
+                            </form>
+                            <form action="{% url 'buyProductPrice' product.id %}" class="products-container" method="post">
+                                {% csrf_token %}
+                                <button class="productButton product products-container" type="submit">Купить</button>
+                            </form>
+                        {% endif %}
                 </div>
     </div>
 {% endblock %}

@@ -1,12 +1,12 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-<div class="mainLabel"><h1>Корзина</h1></div>
+<div class="mainLabel"><h1>Покупки</h1></div>
     <div class="productsMain">
-        {% for basket in baskets %}
-            {% if basket.username == request.user.username %}
+        {% for sell in sells %}
+            {% if sell.buyer == request.user.username and sell.status == 1 %}
                 {% for product in products %}
-                    {% if product.id == basket.product_id %}
+                    {% if product.id == sell.product_id %}
                         <div class="products-container productsMain">
                             <a href="{% url 'product' product.id %} ">
                             <img class="productImage products-container" src="../../static{{ product.image.url }}">
@@ -20,14 +20,10 @@
                                     <div class="productSeller products-container"><div class="logo">Продавец: </div>{{ user.nickname }}</div>
                                 {% endif %}
                             {% endfor %}
-                            {% for sell in sells %}
-                                {% if sell.buyer == request.user.username and product.id == sell.product_id %}
-                                    <form action="{% url 'buyProductAuction' product.id %}" class="products-container" method="post">
-                                        {% csrf_token %}
-                                        <button class="productButton products-container" name="foo" type="submit">Оплатить</button>
-                                    </form>
-                                {% endif %}
-                            {% endfor %}
+                                <form action="" class="products-container" method="post">
+                                    {% csrf_token %}
+                                    <button class="productButton products-container" name="foo" type="submit">Скачать</button>
+                                </form>
                         </div>
                     {% endif %}
                 {% endfor %}
