@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="main-content-field">
+    <div class="content-wrap">
+        <div class="image-search-result-text"><p>Ваши покупки</p></div>
+        <div class="main-content-list--flex">
+            {% for sell in sells %}
+                {% if sell.buyer == request.user.username and sell.status == 1 %}
+                    {% for product in products %}
+                        {% if product.id == sell.product_id %}
+                            <a href="{% url 'product' product.id %} ">
+                                    <div class="card-image">
+                                        <div class="image-wrapper">
+                                            <img src="../../static{{ product.image.url }}">
+                                        </div>
+                                        <div class="card-bottom">
+                                            <div class="card-info">
+                                                <div class="image-title-text"><p>{{ product.label }}</p></div>
+                                                {% for user in users %}
+                                                    {% if product.username == user.username %}
+                                                        <div class="creator-title-text"><p>{{ user.nickname }}</p></div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div class="card-price--flex">
+                                                <div class="starting-price-text"><p>Нач. цена: {{ product.auction }}₽</p></div>
+                                                <div class="redemption-price-text"><p></p>Выкуп: {{ product.price }}₽</div>
+                                            </div>
+                                            <form action="" class="products-container" method="post">
+                                                {% csrf_token %}
+                                                <button class="productButton products-container" name="foo" type="submit">Скачать</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </a>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <div class="main-content-field">
+    <div class="content-wrap">
+        <div class="image-search-result-text"><p>Добро пожаловать, {{ user.nickname }}! Ваш баланс: {{ user.balance }}</p></div>
+        <div class="catalog-container">
+                        {% if user.usertype == 'seller' %}
+                            <a href="{% url 'myProducts' %}" class="catalog-container_my_products">Мои товары</a>
+                            <a href="{% url 'addProduct' %}" class="catalog-container_my_products">Добавить товар</a>
+                            <a href="{% url 'downBalance' %}" class="catalog-container_my_products">Вывести</a>
+                        {% endif %}
+                        {% if user.usertype == 'buyer' %}
+                            <a href="{% url 'basket' %}" class="catalog-container_my_products">Текущие лоты</a>
+                            <a href="{% url 'purchases' %}" class="catalog-container_my_products">Мои изображения</a>
+                            <a href="{% url 'upBalance' %}" class="catalog-container_my_products">Пополнить баланс</a>
+                        {% endif %}
+                        <a href="{% url 'deleteUser' %}" class="catalog-container_my_products" style="color: red">Удалить аккаунт</a>
+                        <a href="{% url 'logout' %}" class="catalog-container_my_products">Выйти</a>
+          </div>
+    </div>
+</div>
+{% endblock %}

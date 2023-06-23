@@ -1,0 +1,51 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="addproduct">
+    <div class="mainLabel addproduct"><h1>Добавить товар</h1></div>
+    <form enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="username" value="{{ user.get_username }}" placeholder="username" class="username" readonly>
+        <label>
+            <input type="text" name="label" pattern=".{5,30}" placeholder="Название товара, от 5 до 30 символов" class="addproduct label">
+            {% if form.errors.label %}
+                <div class="addproduct labelError errorsInput">Ошибка названия</div>
+            {% endif %}
+        </label>
+        <label>
+            <input type="text" name="description" pattern=".{5,500}" placeholder="Описание товара, от 5 до 500 символов" class="addproduct description">
+            {% if form.errors.description %}
+                <div class="addproduct descriptionError errorsInput">Ошибка описания</div>
+            {% endif %}
+        </label>
+        <label>
+            <input type="number" name="auction" min="1" placeholder="Аукционная цена" class="addproduct auction">
+            {% if form.errors.price %}
+                <div class="addproduct auctionError errorsInput">Ошибка аукционной цены</div>
+            {% endif %}
+        </label>
+        <label>
+            <input type="number" name="price" min="1" placeholder="Цена" class="addproduct price">
+            {% if form.errors.price %}
+                <div class="addproduct priceError errorsInput">Ошибка цены</div>
+            {% endif %}
+        </label>
+        <select name="category" size="1" class="addproduct category">
+            <option selected value="pets" class="choice1 category">Товары для животных</option>
+            <option value="electronics" class="choice2 category">Электроника</option>
+            <option value="clothes" class="choice3 category">Одежда</option>
+            <option value="books" class="choice4 category">Книги</option>
+            <option value="pharmacy" class="choice5 category">Аптека</option>
+            <option value="children" class="choice6 category">Детские товары</option>
+            <option value="other" class="choice7 category">Другое</option>
+        </select>
+        <label>
+            <input type="file" accept="image/*" name="image"  class="addproduct image">
+            {% if form.errors.image %}
+                <div class="addproduct imageError errorsInput">Ошибка файла</div>
+            {% endif %}
+        </label>
+            <button class="addproduct addproductButton" name="foo" type="submit">Добавить</button>
+    </form>
+</div>
+{% endblock %}

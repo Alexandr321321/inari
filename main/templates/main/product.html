@@ -1,0 +1,76 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <div class="main-content-field">
+        <div class="content-wrap">
+            <div class="image-search-result-text">
+                <p>Изображение
+                    {% for user in users %}
+                        {% if product.username == user.username %}
+                            {{ user.nickname }}
+                        {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+            <div class="main-content-list--flex">
+
+                <div class="big-card-image">
+                    <div class="big-image-wrapper">
+                        <img src="../../static{{ product.image.url }}">
+                    </div>
+                </div>
+
+                <div class="image-info">
+                    <div class="image-name">
+                        <div class="card-bottom">
+                            <div class="card-info-big">
+                                <div class="image-title-text"><p>{{ product.label }}</p></div>
+                                 {% for user in users %}
+                                    {% if product.username == user.username %}
+                                        <div class="creator-title-text"><p>{{ user.nickname }}</p></div>
+                                    {% endif %}
+                                 {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="image-description">
+                        <div class="card-bottom">
+                            <div class="card-info-big">
+                                <div class="image-title-text"><p>Описание</p></div>
+                                <div class="description-title-text"><p>{{ product.description }}</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if request.user.usertype == "buyer"%}
+                        <div class="image-sale">
+                            <div class="image-price--flex">
+                                <div class="starting-price-text"><p>Нач. цена: {{ product.auction }}₽</p></div>
+                                <div class="redemption-price-text"><p></p>Выкуп: {{ product.price }}₽</div>
+                            </div>
+                            <div class="card-bet-big--flex">
+                                <form action="{% url 'addAuctionBid' product.id %}" method="post">
+                                    <label>
+                                        <input type="number" name="bid" min="{{ product.auction }}" max="{{ product.price }}" placeholder="Ваша ставка" class="bet-field-box">
+                                            {% if form.errors.price %}
+                                                <div class="addproduct auctionError errorsInput">Ошибка аукционной цены</div>
+                                            {% endif %}
+                                    </label>
+                                    {% csrf_token %}
+                                    <div class="container-button--flex">
+                                    <button class="bet-button" name="foo" type="submit">Ставка</button>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="image-byu">
+                            <form action="{% url 'buyProductPrice' product.id %}" class="bet-field-box" method="post">
+                                {% csrf_token %}
+                                    <button type="submit">Выкупить</button>
+                            </form>
+                        </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

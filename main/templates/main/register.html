@@ -1,0 +1,66 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+     <div class="main-content-field">
+    <div class="content-wrap">
+        <div class="image-search-result-text"><p>Регистрация</p></div>
+        <div class="catalog-container">
+<div class="registration">
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <label>
+            <input type="number" name="username" placeholder="Номер телефона" class="authorization_register_ink_text">
+            {% if form.errors.username %}
+                <div class="registration usernameError errorsInput">Ошибка телефон</div>
+            {% endif %}
+        </label>
+        <label>
+            <input type="text" name="nickname" placeholder="Nickname" class="authorization_register_ink_text">
+            {% if form.errors.nickname %}
+                <div class="registration nicknameError errorsInput">Ошибка nickname</div>
+            {% endif %}
+        </label>
+        <label>
+            <input type="password" name="password1" placeholder="Пароль" class="authorization_register_ink_text">
+            {% if form.errors.password2 %}
+                <div class="registration passwordError errorsInput">Ошибка password</div>
+            {% endif %}
+        </label>
+        <div class="registration passwordCriterion">
+            <div class="register_text">Ваш пароль не может быть слишком похож на другую вашу личную информацию.</div>
+            <div class="register_text">Ваш пароль должен содержать не менее 8 символов.</div>
+            <div class="register_text">Ваш пароль не может быть широко используемым паролем.</div>
+            <div class="register_text">Ваш пароль не может использовать только числа.</div>
+        </div>
+        <label>
+            <input type="password" name="password2" placeholder="Повторите пароль" class="authorization_register_ink_text">
+        </label>
+        <label>
+            <input type="email" name="email" placeholder="Почта" class="authorization_register_ink_text">
+            {% if form.errors.email %}
+                <div class="registration emailError errorsInput">Ошибка email</div>
+            {% endif %}
+        </label>
+        <label>
+            <input type="text" name="last_name" placeholder="Фамилия" class="authorization_register_ink_text">
+        </label>
+        <label>
+            <input type="text" name="first_name" placeholder="Имя" class="authorization_register_ink_text">
+        </label>
+        <label>
+            <input type="text" name="second_name" placeholder="Отчество" class="authorization_register_ink_text">
+        </label>
+        <label>
+            <select name="usertype" size="1" class="authorization_register_ink_text">
+            <option selected value="buyer" class="choice1 usertype">Я покупатель</option>
+            <option value="seller" class="choice2 usertype">Я продавец</option>
+            </select>
+        </label>
+        <button class="catalog-container_my_products" type="submit" style="margin-left: 2px">Зарегистрироваться</button>
+        <div class="register_link_text"><p>Есть аккаунт? <a href="/login">Вход</a></p></div>
+    </form>
+</div>
+          </div>
+    </div>
+</div>
+{% endblock %}

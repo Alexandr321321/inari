@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="mainLabel" style="text-align: center;"><h1>Каталог</h1></div>
+        <div class="catalog-container">
+            <a href="/pets" class="catalog-container pets">Товары для животных</a>
+            <a href="/electronics" class="catalog-container electronics">Электроника</a>
+            <a href="/clothes" class="catalog-container clothes">Одежда</a>
+            <a href="/books" class="catalog-container books">Книги</a>
+            <a href="/pharmacy" class="catalog-container pharmacy">Аптека</a>
+            <a href="/children" class="catalog-container children">Детские товары</a>
+            <a href="/other" class="catalog-container other">Другое</a>
+        </div>
+{% endblock %}

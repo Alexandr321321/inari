@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <div class="main-content-field">
+    <div class="content-wrap">
+        <div class="image-search-result-text"><p>Вход</p></div>
+        <div class="catalog-container">
+<div class="authorization">
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <label>
+            <input type="number" name="username" placeholder="Номер телефона" class="authorization_register_ink_text">
+        </label>
+        <label>
+            <input type="password" name="password" placeholder="Пароль" class="authorization_register_ink_text">
+        </label>
+        <button class="catalog-container_my_products" type="submit">Войти</button>
+        <div class="register_link_text"><p>Нет аккаунта? <a href="/register">Регистрация</a></p></div>
+        <div>
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in form.non_field_errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+         </div>
+    </div>
+</div>
+{% endblock %}

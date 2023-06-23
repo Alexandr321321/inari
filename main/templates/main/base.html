@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inari</title>
+    <link rel="stylesheet" type="text/css" href="../../static/style.css">
+    <title>Pulse</title>
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header">
+            <div class="header-container imagebuttonuser">
+                <a href="/me">Профиль</a>
+            </div>
+
+            <div class="header-container imagebuttonbasket">
+                <a href="/basket">Аукцион</a>
+            </div>
+
+            <div class="balans">{{ user.balance }}</div>
+
+        </div>
+    </div>
+</header>
+<main>
+<div class="banner">
+    <div class="banner-wrap">
+        <div class="banner-background-image"><img src="../../static/image/banner_image.png"></div>
+    </div>
+    <div class="content-wrap">
+        <div class="banner-filling--flex">
+            <div class="banner-info">
+                <div class="title-text"><h1>Найди себе авторское изображение</h1></div>
+                <form action="{% url 'search' %}" class="" method="post">
+                    {% csrf_token %}
+                        <input name="searchText" type="text" class="image-search-box" placeholder="Искать изображение">
+                </form >
+            </div>
+            <div class="main-card">
+                <div class="main-card-image">
+                    <img src="../../static/image/main_card_image.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% block content %}
+{% endblock %}
+</main>
+<footer>
+</footer>
+</body>
+</html>
